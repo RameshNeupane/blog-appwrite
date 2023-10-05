@@ -15,7 +15,7 @@ const Signup = () => {
     const handleSignup = async (data) => {
         setError("");
         try {
-            const session = authService.createAccount(data);
+            const session = await authService.createAccount(data);
             if (session) {
                 const userData = await authService.getCurrentUser();
                 if (userData) {
@@ -26,6 +26,7 @@ const Signup = () => {
         } catch (error) {
             setError(error.message);
         }
+        console.error("error: ", error);
     };
 
     return (
@@ -85,7 +86,7 @@ const Signup = () => {
                                 required: true,
                             })}
                         />
-                        <Button>Create Account</Button>
+                        <Button type="submit">Create Account</Button>
                     </div>
                 </form>
             </div>

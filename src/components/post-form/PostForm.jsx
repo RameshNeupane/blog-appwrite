@@ -17,7 +17,7 @@ const PostForm = ({ post }) => {
         });
 
     const navigate = useNavigate();
-    const userData = useSelector((state) => state.auth.userData);
+    const userData = useSelector((state) => state.auth.userData.userData);
 
     const submitPost = async (data) => {
         // if there is post data i.e. updating post
@@ -47,9 +47,9 @@ const PostForm = ({ post }) => {
             if (file) {
                 const fileId = file.$id;
                 data.featuredImage = fileId;
+                data.userId = userData.$id;
                 const newPost = await service.createPost({
                     ...data,
-                    userId: userData.$id,
                 });
                 if (newPost) {
                     navigate(`/post/${newPost.$id}`);
@@ -64,8 +64,9 @@ const PostForm = ({ post }) => {
             return value
                 .trim()
                 .toLowerCase()
-                .replace(/^[a-zA-Z\d\s]+/g, "-")
-                .replace(/\s/g, "-");
+                .replace(/[^\w\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/--+/g, "-");
         }
 
         return "";
@@ -123,9 +124,7 @@ const PostForm = ({ post }) => {
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={appwriteService.getFilePreview(
-                                post.featuredImage
-                            )}
+                            src={service.getFilePreview(post.featuredImage)}
                             alt={post.title}
                             className="rounded-lg"
                         />
