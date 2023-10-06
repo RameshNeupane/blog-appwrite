@@ -1,9 +1,8 @@
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Container, Logo, LogoutBtn } from "../index";
 
 const Header = () => {
-    const navigate = useNavigate();
     const authStatus = useSelector((state) => state.auth.status);
 
     const navItems = [
@@ -35,24 +34,35 @@ const Header = () => {
     ];
 
     return (
-        <header className="py-3 shadow bg-gray-500">
+        <header className="shadow bg-purple-500 h-20">
             <Container>
-                <nav className="flex">
-                    <div className="mr-4">
+                <nav className="flex h-full">
+                    <div className="mr-4 h-full flex items-center justify-center">
                         <Link to="/">
-                            <Logo width="70px" />
+                            <Logo
+                                width="70px"
+                                className=" p-2 rounded hover:bg-purple-300 transition-colors duration-200 ease-in"
+                            />
                         </Link>
                     </div>
-                    <ul className="flex ml-auto">
+                    <ul className=" relative flex ml-auto gap-4 text-lg">
                         {navItems.map((item) =>
                             item.active ? (
                                 <li key={item.name}>
-                                    <button
-                                        onClick={() => navigate(item.slug)}
-                                        className="inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full"
+                                    <NavLink
+                                        to={item.slug}
+                                        className={({ isActive }) =>
+                                            `h-full px-4 flex justify-center items-center hover:bg-purple-300 transition-colors duration-200 ease-in
+                                            ${
+                                                isActive
+                                                    ? "bg-purple-300 font-medium text-purple-950"
+                                                    : ""
+                                            }
+                                            `
+                                        }
                                     >
                                         {item.name}
-                                    </button>
+                                    </NavLink>
                                 </li>
                             ) : null
                         )}

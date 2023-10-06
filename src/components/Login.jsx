@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import authService from "../appwrite/auth";
-import { login as authLogin } from "../store/authSlice";
 import { Button, Input, Logo } from "./index";
+import { Link, useNavigate } from "react-router-dom";
+import { login as authLogin } from "../store/authSlice";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -30,11 +30,11 @@ const Login = () => {
     return (
         <div className="flex items-center justify-center w-full">
             <div
-                className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
+                className={`mx-auto w-full max-w-lg bg-purple-100 rounded-xl p-10 border border-black/10`}
             >
                 <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
+                    <span className="inline-flex justify-center w-full max-w-[100px]">
+                        <Logo />
                     </span>
                 </div>
                 <h2 className="text-center text-2xl font-bold leading-tight">
@@ -44,7 +44,7 @@ const Login = () => {
                     Don&apos;t have any account?&nbsp;
                     <Link
                         to="/signup"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                        className="font-medium text-primary text-purple-800 transition-all duration-200 hover:underline"
                     >
                         Sign Up
                     </Link>

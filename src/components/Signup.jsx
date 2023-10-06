@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import authService from "../appwrite/auth";
 import { login } from "../store/authSlice";
 import { Button, Input, Logo } from "./index";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -32,11 +32,11 @@ const Signup = () => {
     return (
         <div className="flex items-center justify-center">
             <div
-                className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
+                className={`mx-auto w-full max-w-lg bg-purple-100 rounded-xl p-10 border border-black/10`}
             >
                 <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
+                    <span className="inline-flex justify-center w-full max-w-[100px]">
+                        <Logo />
                     </span>
                 </div>
                 <h2 className="text-center text-2xl font-bold leading-tight">
@@ -46,7 +46,7 @@ const Signup = () => {
                     Already have an account?&nbsp;
                     <Link
                         to="/login"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                        className="font-medium text-primary text-purple-800 transition-all duration-200 hover:underline"
                     >
                         Sign In
                     </Link>
@@ -86,7 +86,12 @@ const Signup = () => {
                                 required: true,
                             })}
                         />
-                        <Button type="submit">Create Account</Button>
+                        <Button
+                            type="submit"
+                            className="w-full hover:bg-blue-500"
+                        >
+                            Create Account
+                        </Button>
                     </div>
                 </form>
             </div>

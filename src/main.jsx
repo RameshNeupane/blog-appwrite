@@ -1,8 +1,9 @@
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
 import "./index.css";
-import { Provider } from "react-redux";
+import App from "./App.jsx";
 import store from "./store/store.js";
+import { Provider } from "react-redux";
+import ReactDOM from "react-dom/client";
+import { AuthLayout } from "./components";
 import {
     Route,
     RouterProvider,
@@ -18,7 +19,6 @@ import {
     Post,
     Signup,
 } from "./pages";
-import { AuthLayout } from "./components";
 
 const router = createBrowserRouter(
     createRoutesFromElements(

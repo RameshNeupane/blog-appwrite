@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import service from "../../appwrite/configuration";
 import { useCallback, useEffect } from "react";
+import service from "../../appwrite/configuration";
 import { Button, Input, RTE, Select } from "../index";
 
 const PostForm = ({ post }) => {
@@ -53,6 +53,8 @@ const PostForm = ({ post }) => {
                 });
                 if (newPost) {
                     navigate(`/post/${newPost.$id}`);
+                } else {
+                    console.log("no new post");
                 }
             }
         }

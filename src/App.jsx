@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
-import { login, logout } from "./store/authSlice";
-import { Footer, Header } from "./components";
 import { Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Footer, Header } from "./components";
+import { login, logout } from "./store/authSlice";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -23,12 +23,17 @@ const App = () => {
             .finally(() => setIsLoading(false));
     }, [dispatch]);
 
-    if (isLoading) return <div>Loading...</div>;
     return (
-        <div>
+        <div className="min-w-screen min-h-screen flex flex-col justify-between">
             <Header />
             <main>
-                <Outlet />
+                {isLoading ? (
+                    <div className="text-center text-xl font-medium">
+                        Loading...
+                    </div>
+                ) : (
+                    <Outlet />
+                )}
             </main>
             <Footer />
         </div>
