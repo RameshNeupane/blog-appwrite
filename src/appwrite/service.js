@@ -58,10 +58,9 @@ class Service {
                 config.appwriteCollectionId,
                 slug
             );
-            return true;
         } catch (error) {
             console.log("Appwrite service :: deletePost :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -75,7 +74,7 @@ class Service {
             );
         } catch (error) {
             console.log("Appwrite service :: getPost :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -89,7 +88,7 @@ class Service {
             );
         } catch (error) {
             console.log("Appwrite service :: getPosts :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -109,7 +108,7 @@ class Service {
             );
         } catch (error) {
             console.log("Appwrite service :: uploadFile :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -117,10 +116,9 @@ class Service {
     async deleteFile(fileId) {
         try {
             await this.storage.deleteFile(config.appwriteBucketId, fileId);
-            return true;
         } catch (error) {
             console.log("Appwrite service :: deleteFile :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -130,7 +128,7 @@ class Service {
             return this.storage.getFilePreview(config.appwriteBucketId, fileId);
         } catch (error) {
             console.log("Appwrite service :: getFilePreview :: error", error);
-            return false;
+            throw error;
         }
     }
 }

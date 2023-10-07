@@ -1,32 +1,27 @@
-import { useState } from "react";
+import {
+    signup,
+    getAuthError,
+    getAuthStatus,
+    getIsUserLoggedIn,
+} from "../store/authSlice";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import authService from "../appwrite/auth";
-import { login } from "../store/authSlice";
 import { Button, Input, Logo } from "./index";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [error, setError] = useState("");
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+    const authError = useSelector(getAuthError);
+    const authStatus = useSelector(getAuthStatus);
     const { register, handleSubmit } = useForm();
 
-    const handleSignup = async (data) => {
-        setError("");
-        try {
-            const session = await authService.createAccount(data);
-            if (session) {
-                const userData = await authService.getCurrentUser();
-                if (userData) {
-                    dispatch(login(userData));
-                    navigate("/");
-                }
-            }
-        } catch (error) {
-            setError(error.message);
+    const handleSignup = (data) => {
+        dispatch(signup(data));
+        if (authStatus === "succeeded") {
+            navigate("/");
         }
-        console.error("error: ", error);
     };
 
     return (
@@ -51,9 +46,9 @@ const Signup = () => {
                         Sign In
                     </Link>
                 </p>
-                {error && (
-                    <p className="text-red-600 mt-8 text-center">{error}</p>
-                )}
+                {/* {authError && (
+                    <p className="text-red-600 mt-8 text-center">{authError}</p>
+                )} */}
                 <form onSubmit={handleSubmit(handleSignup)}>
                     <div className="space-y-5">
                         <Input
@@ -90,7 +85,9 @@ const Signup = () => {
                             type="submit"
                             className="w-full hover:bg-blue-500"
                         >
-                            Create Account
+                            {authStatus === "loading"
+                                ? "Signing up..."
+                                : "Create Account"}
                         </Button>
                     </div>
                 </form>

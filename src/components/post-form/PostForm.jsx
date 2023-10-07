@@ -2,8 +2,9 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-import service from "../../appwrite/configuration";
+import service from "../../appwrite/service";
 import { Button, Input, RTE, Select } from "../index";
+import { getUserData } from "../../store/authSlice";
 
 const PostForm = ({ post }) => {
     const { register, handleSubmit, control, watch, setValue, getValues } =
@@ -17,7 +18,8 @@ const PostForm = ({ post }) => {
         });
 
     const navigate = useNavigate();
-    const userData = useSelector((state) => state.auth.userData.userData);
+    const userData = useSelector(getUserData);
+    console.log(userData);
 
     const submitPost = async (data) => {
         // if there is post data i.e. updating post

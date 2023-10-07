@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { Container, Logo, LogoutBtn } from "../index";
+import { getIsUserLoggedIn } from "../../store/authSlice";
 
 const Header = () => {
-    const authStatus = useSelector((state) => state.auth.status);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
 
     const navItems = [
         {
@@ -14,22 +15,22 @@ const Header = () => {
         {
             name: "Login",
             slug: "/login",
-            active: !authStatus,
+            active: !isUserLoggedIn,
         },
         {
             name: "Signup",
             slug: "/signup",
-            active: !authStatus,
+            active: !isUserLoggedIn,
         },
         {
             name: "All Posts",
             slug: "/all-posts",
-            active: authStatus,
+            active: isUserLoggedIn,
         },
         {
             name: "Add Post",
             slug: "/add-post",
-            active: authStatus,
+            active: isUserLoggedIn,
         },
     ];
 
@@ -66,7 +67,7 @@ const Header = () => {
                                 </li>
                             ) : null
                         )}
-                        {authStatus && (
+                        {isUserLoggedIn && (
                             <li>
                                 <LogoutBtn />
                             </li>

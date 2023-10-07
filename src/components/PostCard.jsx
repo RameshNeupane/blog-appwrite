@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import service from "../appwrite/configuration";
+import service from "../appwrite/service";
 
 function PostCard({ $id, title, featuredImage }) {
     return (
-        <Link to={`/post/${$id}`}>
+        <Link to={`/post/${$id}`} className="inline-flex justify-center w-full">
             <div className="group border-2 border-purple-100 w-full min-w-[300px] max-w-lg h-96 rounded-md hover:bg-purple-200 hover:border-purple-200 transition-all duration-200 ease-in">
                 <div className="h-3/4">
                     <div className="h-full w-full relative overflow-hidden rounded-t-md">

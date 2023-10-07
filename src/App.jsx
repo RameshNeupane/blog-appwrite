@@ -1,27 +1,27 @@
-import { useDispatch } from "react-redux";
-import authService from "./appwrite/auth";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Footer, Header } from "./components";
-import { login, logout } from "./store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllPosts, resetPosts } from "./store/postsSlice";
+import { currentUser, getIsUserLoggedIn } from "./store/authSlice";
 
 const App = () => {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
 
     useEffect(() => {
-        setIsLoading(true);
-        authService
-            .getCurrentUser()
-            .then((userData) => {
-                if (userData) {
-                    dispatch(login({ userData }));
-                } else {
-                    dispatch(logout());
-                }
-            })
-            .finally(() => setIsLoading(false));
+        dispatch(currentUser());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (isUserLoggedIn) {
+            dispatch(fetchAllPosts());
+        } else {
+            // reset posts
+            dispatch(resetPosts());
+        }
+    }, [dispatch, isUserLoggedIn]);
 
     return (
         <div className="min-w-screen min-h-screen flex flex-col justify-between">

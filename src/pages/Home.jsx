@@ -1,22 +1,14 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import service from "../appwrite/configuration";
+import { getAllPosts } from "../store/postsSlice";
 import { Container, PostCard } from "../components";
+import { getIsUserLoggedIn } from "../store/authSlice";
 
 const Home = () => {
-    const [posts, setPosts] = useState([]);
-    const authStatus = useSelector((state) => state.auth.status);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+    const posts = useSelector(getAllPosts);
 
-    useEffect(() => {
-        service.getPosts([]).then((posts) => {
-            if (posts) {
-                setPosts(posts.documents);
-            }
-        });
-    }, []);
-
-    if (!authStatus) {
+    if (!isUserLoggedIn) {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
@@ -37,33 +29,35 @@ const Home = () => {
             </div>
         );
     } else {
-        return (
-            <div className="w-full py-8">
-                <Container>
-                    <div className="flex flex-wrap">
-                        {posts.length > 0 ? (
-                            posts.map((post) => (
-                                <div key={post.$id} className="p-2 w-1/4">
+        if (posts.length === 0) {
+            return (
+                <div className="p-2 w-full flex flex-col items-center">
+                    <h1 className="text-2xl font-bold hover:text-gray-500">
+                        No post to read.
+                    </h1>
+                    <Link
+                        to="/add-post"
+                        className="block mt-6 text-lg bg-purple-400 w-max py-4 px-6 rounded-md hover:bg-purple-500 duration-200 ease-out"
+                    >
+                        Add New Post
+                    </Link>
+                </div>
+            );
+        } else {
+            return (
+                <div className="w-full py-8">
+                    <Container>
+                        <div className="relative gap-4 grid grid-col-1 sm:grid-cols-2 xl:grid-cols-3 justify-stretch">
+                            {posts.map((post) => (
+                                <div key={post.$id} className="p-2 w-full">
                                     <PostCard {...post} />
                                 </div>
-                            ))
-                        ) : (
-                            <div className="p-2 w-full flex flex-col items-center">
-                                <h1 className="text-2xl font-bold hover:text-gray-500">
-                                    No post to read.
-                                </h1>
-                                <Link
-                                    to="/add-post"
-                                    className="block mt-6 text-lg bg-purple-400 w-max py-4 px-6 rounded-md hover:bg-purple-500 duration-200 ease-out"
-                                >
-                                    Add New Post
-                                </Link>
-                            </div>
-                        )}
-                    </div>
-                </Container>
-            </div>
-        );
+                            ))}
+                        </div>
+                    </Container>
+                </div>
+            );
+        }
     }
 };
 

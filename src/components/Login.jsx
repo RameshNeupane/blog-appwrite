@@ -1,30 +1,27 @@
-import { useState } from "react";
+import {
+    login,
+    getAuthError,
+    getAuthStatus,
+    getIsUserLoggedIn,
+} from "../store/authSlice";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import authService from "../appwrite/auth";
 import { Button, Input, Logo } from "./index";
 import { Link, useNavigate } from "react-router-dom";
-import { login as authLogin } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { register, handleSubmit } = useForm();
-    const [error, setError] = useState("");
 
-    const handleLogin = async (data) => {
-        setError("");
-        try {
-            const session = await authService.login(data);
-            if (session) {
-                const userData = await authService.getCurrentUser();
-                if (userData) {
-                    dispatch(authLogin(userData));
-                    navigate("/");
-                }
-            }
-        } catch (error) {
-            setError(error.message);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+    const authError = useSelector(getAuthError);
+    const authStatus = useSelector(getAuthStatus);
+
+    const handleLogin = (data) => {
+        dispatch(login(data));
+        if (authStatus === "succeeded") {
+            navigate("/");
         }
     };
     return (
@@ -49,9 +46,9 @@ const Login = () => {
                         Sign Up
                     </Link>
                 </p>
-                {error && (
-                    <p className="text-red-600 mt-8 text-center">{error}</p>
-                )}
+                {/* {authError && (
+                    <p className="text-red-600 mt-8 text-center">{authError}</p>
+                )} */}
                 <form onSubmit={handleSubmit(handleLogin)} className="mt-8">
                     <div className="space-y-5">
                         <Input
@@ -78,7 +75,9 @@ const Login = () => {
                             })}
                         />
                         <Button type="submit" className="w-full">
-                            Sign in
+                            {authStatus === "loading"
+                                ? "Signing in..."
+                                : "Sign in"}
                         </Button>
                     </div>
                 </form>

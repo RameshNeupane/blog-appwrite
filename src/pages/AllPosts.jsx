@@ -1,28 +1,12 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import service from "../appwrite/configuration";
+import { useSelector } from "react-redux";
+import { getAllPosts } from "../store/postsSlice";
 import { Container, PostCard } from "../components";
 
 const AllPosts = () => {
-    const [posts, setPosts] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        setIsLoading(true);
-        service.getPosts([]).then((posts) => {
-            if (posts) {
-                setPosts(posts.documents);
-            }
-        });
-        setIsLoading(false);
-    }, []);
+    const posts = useSelector(getAllPosts);
 
-    if (isLoading) {
-        return (
-            <div className="text-center text-xl font-medium">Loading...</div>
-        );
-    }
-
-    if (!isLoading && posts.length === 0) {
+    if (posts.length === 0) {
         return (
             <div className="p-2 w-full flex flex-col items-center">
                 <h1 className="text-2xl font-bold hover:text-gray-500">
@@ -40,9 +24,9 @@ const AllPosts = () => {
     return (
         <div className="w-full py-8">
             <Container>
-                <div className="flex flex-wrap">
+                <div className="relative gap-4 grid grid-col-1 sm:grid-cols-2 xl:grid-cols-3 justify-stretch">
                     {posts.map((post) => (
-                        <div key={post.$id} className="p-2 w-1/4">
+                        <div key={post.$id} className="p-2 w-full">
                             <PostCard {...post} />
                         </div>
                     ))}

@@ -1,21 +1,17 @@
-import { useDispatch } from "react-redux";
-import authService from "../../appwrite/auth";
-import { logout } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthStatus, logout } from "../../store/authSlice";
 
 const LogoutBtn = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const authStatus = useSelector(getAuthStatus);
 
     const logoutHandler = () => {
-        authService
-            .logout()
-            .then(() => {
-                dispatch(logout());
-            })
-            .then(() => {
-                navigate("/");
-            });
+        dispatch(logout());
+        if (authStatus === "succeeded") {
+            navigate("/");
+        }
     };
     return (
         <button
