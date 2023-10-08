@@ -8,8 +8,8 @@ import Signup from "./Signup";
 import PostCard from "./PostCard";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
+import Avatar from "./Header/Avatar";
 import AuthLayout from "./AuthLayout";
-import LogoutBtn from "./Header/LogoutBtn";
 import PostForm from "./post-form/PostForm";
 import Container from "./Container/Container";
 
@@ -19,6 +19,7 @@ export {
     Logo,
     Input,
     Login,
+    Avatar,
     Footer,
     Button,
     Select,
@@ -26,6 +27,5 @@ export {
     PostCard,
     PostForm,
     Container,
-    LogoutBtn,
     AuthLayout,
 };

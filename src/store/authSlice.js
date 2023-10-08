@@ -5,7 +5,10 @@ const initialState = {
     status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
     isUserLoggedIn: false,
     userData: null,
-    error: null,
+    error: "",
+    signupError: "",
+    loginError: "",
+    logoutError: "",
 };
 
 // signup
@@ -13,7 +16,10 @@ export const signup = createAsyncThunk("auth/signup", async (data) => {
     const session = await authService.createAccount(data);
     if (session) {
         const response = await authService.getCurrentUser();
-        return response;
+        if (response) {
+            const avatar = authService.getAvatarInitials(response.name);
+            return { ...response, avatar };
+        }
     }
 });
 
@@ -22,7 +28,10 @@ export const login = createAsyncThunk("auth/login", async (data) => {
     const session = await authService.login(data);
     if (session) {
         const response = await authService.getCurrentUser();
-        return response;
+        if (response) {
+            const avatar = authService.getAvatarInitials(response.name);
+            return { ...response, avatar };
+        }
     }
 });
 
@@ -31,16 +40,27 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     await authService.logout();
 });
 
+// current user
 export const currentUser = createAsyncThunk("auth/currentUser", async () => {
     const response = await authService.getCurrentUser();
-    return response;
+    if (response) {
+        const avatar = authService.getAvatarInitials(response.name);
+        return { ...response, avatar };
+    }
 });
 
 // auth slice
 const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {},
+    reducers: {
+        resetSignupError: (state) => {
+            state.signupError = "";
+        },
+        resetLoginError: (state) => {
+            state.loginError = "";
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(signup.pending, (state) => {
@@ -48,7 +68,7 @@ const authSlice = createSlice({
             })
             .addCase(signup.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.error = null;
+                state.signupError = "";
                 state.isUserLoggedIn = true;
                 state.userData = action.payload;
             })
@@ -56,14 +76,14 @@ const authSlice = createSlice({
                 state.status = "failed";
                 state.isUserLoggedIn = false;
                 state.userData = null;
-                state.error = action.error.message;
+                state.signupError = action.error.message;
             })
             .addCase(login.pending, (state) => {
                 state.status = "loading";
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.error = null;
+                state.loginError = "";
                 state.isUserLoggedIn = true;
                 state.userData = action.payload;
             })
@@ -71,27 +91,27 @@ const authSlice = createSlice({
                 state.status = "failed";
                 state.isUserLoggedIn = false;
                 state.userData = null;
-                state.error = action.error.message;
+                state.loginError = action.error.message;
             })
             .addCase(logout.pending, (state) => {
                 state.status = "loading";
             })
             .addCase(logout.fulfilled, (state) => {
                 state.status = "succeeded";
-                state.error = null;
+                state.logoutError = "";
                 state.userData = null;
                 state.isUserLoggedIn = false;
             })
             .addCase(logout.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message;
+                state.logoutError = action.error.message;
             })
             .addCase(currentUser.pending, (state) => {
                 state.status = "loading";
             })
             .addCase(currentUser.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.error = null;
+                state.error = "";
                 state.isUserLoggedIn = true;
                 state.userData = action.payload;
             })
@@ -106,7 +126,10 @@ export const getAuthStatus = (state) => state.auth.status;
 export const getIsUserLoggedIn = (state) => state.auth.isUserLoggedIn;
 export const getUserData = (state) => state.auth.userData;
 export const getAuthError = (state) => state.auth.error;
+export const getSignupError = (state) => state.auth.signupError;
+export const getLoginError = (state) => state.auth.loginError;
+export const getLogoutError = (state) => state.auth.logoutError;
 
-export const {} = authSlice.actions;
+export const { resetLoginError, resetSignupError } = authSlice.actions;
 
 export default authSlice.reducer;

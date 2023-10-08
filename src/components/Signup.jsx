@@ -1,7 +1,8 @@
 import {
     signup,
-    getAuthError,
     getAuthStatus,
+    getSignupError,
+    resetSignupError,
     getIsUserLoggedIn,
 } from "../store/authSlice";
 import { useForm } from "react-hook-form";
@@ -12,14 +13,15 @@ import { useDispatch, useSelector } from "react-redux";
 const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
-    const authError = useSelector(getAuthError);
+    const signupError = useSelector(getSignupError);
     const authStatus = useSelector(getAuthStatus);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
     const { register, handleSubmit } = useForm();
 
     const handleSignup = (data) => {
+        dispatch(resetSignupError());
         dispatch(signup(data));
-        if (authStatus === "succeeded") {
+        if (isUserLoggedIn) {
             navigate("/");
         }
     };
@@ -46,9 +48,9 @@ const Signup = () => {
                         Sign In
                     </Link>
                 </p>
-                {/* {authError && (
-                    <p className="text-red-600 mt-8 text-center">{authError}</p>
-                )} */}
+                {signupError && (
+                    <p className="text-red-600 mt-8 text-center">{signup}</p>
+                )}
                 <form onSubmit={handleSubmit(handleSignup)}>
                     <div className="space-y-5">
                         <Input
@@ -82,8 +84,9 @@ const Signup = () => {
                             })}
                         />
                         <Button
+                            disabled={authStatus === "loading"}
                             type="submit"
-                            className="w-full hover:bg-blue-500"
+                            className="w-full hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-400"
                         >
                             {authStatus === "loading"
                                 ? "Signing up..."

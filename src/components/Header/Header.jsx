@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import { Container, Logo, LogoutBtn } from "../index";
+import { Container, Logo, Avatar } from "../index";
 import { getIsUserLoggedIn } from "../../store/authSlice";
 
 const Header = () => {
@@ -68,8 +68,8 @@ const Header = () => {
                             ) : null
                         )}
                         {isUserLoggedIn && (
-                            <li>
-                                <LogoutBtn />
+                            <li className=" flex items-center">
+                                <Avatar />
                             </li>
                         )}
                     </ul>

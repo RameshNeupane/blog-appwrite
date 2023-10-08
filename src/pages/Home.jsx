@@ -1,14 +1,19 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getAllPosts } from "../store/postsSlice";
 import { Container, PostCard } from "../components";
 import { getIsUserLoggedIn } from "../store/authSlice";
+import { getAllPosts, getPostsStatus } from "../store/postsSlice";
 
 const Home = () => {
     const isUserLoggedIn = useSelector(getIsUserLoggedIn);
     const posts = useSelector(getAllPosts);
+    const postsStatus = useSelector(getPostsStatus);
 
-    if (!isUserLoggedIn) {
+    if (postsStatus === "loading") {
+        return (
+            <div className="text-center text-xl font-medium">Loading...</div>
+        );
+    } else if (!isUserLoggedIn) {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
@@ -32,9 +37,7 @@ const Home = () => {
         if (posts.length === 0) {
             return (
                 <div className="p-2 w-full flex flex-col items-center">
-                    <h1 className="text-2xl font-bold hover:text-gray-500">
-                        No post to read.
-                    </h1>
+                    <h1 className="text-2xl font-bold">No post to read.</h1>
                     <Link
                         to="/add-post"
                         className="block mt-6 text-lg bg-purple-400 w-max py-4 px-6 rounded-md hover:bg-purple-500 duration-200 ease-out"

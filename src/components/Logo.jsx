@@ -7,6 +7,7 @@ const Logo = ({ width = "70px", className = "" }) => {
             alt="logo"
             width={width}
             className={`${className}`}
+            title="blog-appwrite"
         ></img>
     );
 };

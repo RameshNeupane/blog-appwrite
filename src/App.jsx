@@ -15,12 +15,14 @@ const App = () => {
     }, [dispatch]);
 
     useEffect(() => {
+        setIsLoading(true);
         if (isUserLoggedIn) {
             dispatch(fetchAllPosts());
         } else {
             // reset posts
             dispatch(resetPosts());
         }
+        setIsLoading(false);
     }, [dispatch, isUserLoggedIn]);
 
     return (
