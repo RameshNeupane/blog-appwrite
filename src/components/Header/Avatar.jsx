@@ -2,20 +2,23 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuthStatus, getUserData, logout } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Avatar = () => {
+    const navigate = useNavigate("");
     const dispatch = useDispatch();
     const userData = useSelector(getUserData);
     const authStatus = useSelector(getAuthStatus);
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
+        await dispatch(logout());
+        navigate("/");
     };
 
     return (
-        <Menu as="div" className="relative">
+        <Menu as="div" className="group relative z-50">
             <Menu.Button
-                className="flex justify-center items-center rounded-full border-4 border-white hover:border-purple-300 transition-colors duration-200 ease-in"
+                className="flex justify-center items-center rounded-full border-4 border-white group-hover:border-purple-300 transition-colors duration-200 ease-in"
                 title="Menu"
             >
                 <img

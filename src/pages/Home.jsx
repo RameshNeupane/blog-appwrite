@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Container, PostCard } from "../components";
-import { getIsUserLoggedIn } from "../store/authSlice";
 import { getAllPosts, getPostsStatus } from "../store/postsSlice";
+import { getAuthStatus, getIsUserLoggedIn } from "../store/authSlice";
 
 const Home = () => {
-    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
     const posts = useSelector(getAllPosts);
+    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
     const postsStatus = useSelector(getPostsStatus);
+    const authStatus = useSelector(getAuthStatus);
 
-    if (postsStatus === "loading") {
+    if (postsStatus === "loading" || authStatus === "loading") {
         return (
             <div className="text-center text-xl font-medium">Loading...</div>
         );

@@ -18,9 +18,9 @@ const Signup = () => {
     const isUserLoggedIn = useSelector(getIsUserLoggedIn);
     const { register, handleSubmit } = useForm();
 
-    const handleSignup = (data) => {
-        dispatch(resetSignupError());
-        dispatch(signup(data));
+    const handleSignup = async (data) => {
+        await dispatch(resetSignupError());
+        await dispatch(signup(data));
         if (isUserLoggedIn) {
             navigate("/");
         }

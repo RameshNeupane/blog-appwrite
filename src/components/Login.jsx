@@ -4,9 +4,9 @@ import {
     getLoginError,
     resetLoginError,
 } from "../store/authSlice";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button, Input, Logo } from "./index";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
@@ -16,9 +16,9 @@ const Login = () => {
     const loginError = useSelector(getLoginError);
     const authStatus = useSelector(getAuthStatus);
 
-    const handleLogin = (data) => {
-        dispatch(resetLoginError());
-        dispatch(login(data));
+    const handleLogin = async (data) => {
+        await dispatch(resetLoginError());
+        await dispatch(login(data));
     };
     return (
         <div className="flex items-center justify-center w-full">

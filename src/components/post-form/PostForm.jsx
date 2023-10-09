@@ -1,63 +1,38 @@
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import service from "../../appwrite/service";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-import service from "../../appwrite/service";
-import { Button, Input, RTE, Select } from "../index";
 import { getUserData } from "../../store/authSlice";
+import { Button, Input, RTE, Select } from "../index";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewPost, getPostsStatus, updatePost } from "../../store/postsSlice";
 
 const PostForm = ({ post }) => {
     const { register, handleSubmit, control, watch, setValue, getValues } =
         useForm({
             defaultValues: {
                 title: post?.title || "",
-                slug: post?.slug || "",
+                slug: post?.$id || "",
                 content: post?.content || "",
                 status: post?.status || "active",
             },
         });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const userData = useSelector(getUserData);
-    console.log(userData);
+    const postsStatus = useSelector(getPostsStatus);
 
     const submitPost = async (data) => {
-        // if there is post data i.e. updating post
         if (post) {
-            // handle file i.e. image file
-            const file = data.image[0]
-                ? service.uploadFile(data.image[0])
-                : null;
-
-            // delete old image after new image is uploaded successfully
-            if (file) {
-                service.deleteFile(post.featuredImage);
-            }
-
-            // now update post
-            const updatedPost = await service.updatePost(post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : undefined,
-            });
-            if (updatedPost) {
-                navigate(`/post/${updatedPost.$id}`);
+            await dispatch(updatePost({ post, data }));
+            if (postsStatus === "succeeded") {
+                navigate(`/post/${data.slug}`);
             }
         } else {
-            // add new post to the database
-            const file = await service.uploadFile(data.image[0]);
-
-            if (file) {
-                const fileId = file.$id;
-                data.featuredImage = fileId;
-                data.userId = userData.$id;
-                const newPost = await service.createPost({
-                    ...data,
-                });
-                if (newPost) {
-                    navigate(`/post/${newPost.$id}`);
-                } else {
-                    console.log("no new post");
-                }
+            await dispatch(addNewPost({ data, userId: userData.$id }));
+            if (postsStatus === "succeeded") {
+                navigate(`/post/${data.slug}`);
             }
         }
     };
@@ -78,17 +53,29 @@ const PostForm = ({ post }) => {
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
-            if (name === "title") {
-                setValue("slug", transformSlug(value.title), {
-                    shouldValidate: true,
-                });
+            if (!post) {
+                if (name === "title") {
+                    setValue("slug", transformSlug(value.title), {
+                        shouldValidate: true,
+                    });
+                }
             }
         });
 
         return () => {
             subscription.unsubscribe();
         };
-    }, [watch, transformSlug, setValue]);
+    }, [watch, transformSlug, setValue, post]);
+
+    let btnText = "";
+    if (post) {
+        btnText = "Update";
+    } else {
+        btnText = "Publish";
+    }
+    if (postsStatus === "loading") {
+        btnText += "ing...";
+    }
 
     return (
         <form onSubmit={handleSubmit(submitPost)} className="flex flex-wrap">
@@ -102,6 +89,7 @@ const PostForm = ({ post }) => {
                 <Input
                     label="Slug :"
                     placeholder="Slug"
+                    readOnly={post}
                     className="mb-4"
                     {...register("slug", { required: true })}
                     onInput={(e) => {
@@ -145,7 +133,7 @@ const PostForm = ({ post }) => {
                     bgColor={post ? "bg-green-500" : undefined}
                     className="w-full"
                 >
-                    {post ? "Update" : "Submit"}
+                    {btnText}
                 </Button>
             </div>
         </form>

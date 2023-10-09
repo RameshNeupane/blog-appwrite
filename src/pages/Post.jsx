@@ -1,38 +1,29 @@
 import parse from "html-react-parser";
-import { useSelector } from "react-redux";
 import service from "../appwrite/service";
-import { useEffect, useState } from "react";
+import { getUserData } from "../store/authSlice";
 import { Button, Container } from "../components";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+    deletePost,
+    getPostsStatus,
+    getSinglePostById,
+} from "../store/postsSlice";
 
 const Post = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
-    const [post, setPost] = useState(null);
-    const userData = useSelector((state) => state.auth.userData);
+    const dispatch = useDispatch();
+    const post = useSelector((state) => getSinglePostById(state, slug));
+    const postsStatus = useSelector(getPostsStatus);
+    const userData = useSelector(getUserData);
 
     // check author
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
-    useEffect(() => {
-        if (slug) {
-            service.getPost(slug).then((post) => {
-                if (post) {
-                    setPost(post);
-                }
-            });
-        } else {
-            navigate("/");
-        }
-    }, [slug, navigate]);
-
-    const deletePost = () => {
-        service.deletePost(post.$id).then((status) => {
-            if (status) {
-                service.deleteFile(post.featuredImage);
-                navigate("/");
-            }
-        });
+    const handleDelete = async () => {
+        await dispatch(deletePost(post));
+        navigate("/");
     };
 
     return post ? (
@@ -52,7 +43,11 @@ const Post = () => {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button
+                                disabled={postsStatus === "loading"}
+                                bgColor="bg-red-500 hover:bg-red-600 transition-colors duration-200 ease-in disabled:bg-red-400 disabled:cursor-not-allowed"
+                                onClick={handleDelete}
+                            >
                                 Delete
                             </Button>
                         </div>
@@ -61,10 +56,12 @@ const Post = () => {
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
-                <div className="browser-css">{parse(post.content)}</div>
+                <div className="browser-css">{parse(post?.content)}</div>
             </Container>
         </div>
-    ) : null;
+    ) : (
+        <div className="text-center text-xl font-medium">Loading...</div>
+    );
 };
 
 export default Post;

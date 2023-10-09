@@ -53,7 +53,7 @@ class Service {
     // delete post
     async deletePost(slug) {
         try {
-            await this.databases.deleteDocument(
+            return await this.databases.deleteDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug
@@ -115,7 +115,10 @@ class Service {
     // delete file
     async deleteFile(fileId) {
         try {
-            await this.storage.deleteFile(config.appwriteBucketId, fileId);
+            return await this.storage.deleteFile(
+                config.appwriteBucketId,
+                fileId
+            );
         } catch (error) {
             console.log("Appwrite service :: deleteFile :: error", error);
             throw error;
