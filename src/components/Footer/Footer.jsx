@@ -14,7 +14,16 @@ const Footer = () => {
                             <div>
                                 <p className="text-sm text-gray-700">
                                     &copy; Copyright 2023. All Rights Reserved
-                                    by RameshNeupane.
+                                    by{" "}
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://github.com/RameshNeupane/blog-appwrite"
+                                        className="underline hover:text-gray-800"
+                                    >
+                                        RameshNeupane
+                                    </a>
+                                    .
                                 </p>
                             </div>
                         </div>
