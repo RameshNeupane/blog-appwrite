@@ -40,7 +40,7 @@ This is a [React](https://react.dev/) project created with [Vite](https://vitejs
  
 - [**@headlessui/react**](https://www.npmjs.com/package/@headlessui/react): A set of completely unstyled, fully accessible UI components for React, designed to integrate beautifully with Tailwind CSS.
 - [**@reduxjs/toolkit**](https://www.npmjs.com/package/@reduxjs/toolkit): The official, opinionated, batteries-included toolset for efficient Redux development i.e. state management.
-- [**@tinymce/tinymce-react**](https://github.com/tinymce/tinymce-react): Official [TinyMCE]()https://www.tiny.cloud/ React component. The world's #1 open source rich text editor.
+- [**@tinymce/tinymce-react**](https://github.com/tinymce/tinymce-react): Official [TinyMCE](https://www.tiny.cloud/) React component. The world's #1 open source rich text editor.
 - [**html-react-parser**](https://www.npmjs.com/package/html-react-parser): The parser converts an HTML string to one or more React elements.
 - [**react-hook-form**](https://react-hook-form.com/): Performant, flexible and extensible forms with easy-to-use validation.
 - [**react-router-dom**](https://reactrouter.com/en/main): The react-router-dom package contains bindings for using React Router in web applications.
